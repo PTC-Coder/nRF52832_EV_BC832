@@ -1,0 +1,79 @@
+// Copyright (c) 2024 Nordic Semiconductor ASA
+// SPDX-License-Identifier: Apache-2.0
+
+/dts-v1/;
+#include <nordic/nrf52832_ciaa.dtsi>
+
+/ {
+	model = "nrf52832_magpie";
+	compatible = "fanstel,nrf52832-magpie";
+
+	chosen {
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		led0: led_0 {
+			gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
+			label = "Blue LED 0";
+		};
+		led1: led_1 {
+			gpios = <&gpio0 23 GPIO_ACTIVE_LOW>;
+			label = "Red LED 1";
+		};		
+	};
+
+	aliases {
+		led0 = &led0;
+		led1 = &led1;
+		bootloader-led0 = &led0;
+		mcuboot-led0 = &led0;
+		watchdog0 = &wdt0;
+	};
+
+
+};
+
+&gpiote {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x0 0xc000>;
+		};
+		slot0_partition: partition@c000 {
+			label = "image-0";
+			reg = <0xc000 0x32000>;
+		};
+		slot1_partition: partition@3e000 {
+			label = "image-1";
+			reg = <0x3e000 0x32000>;
+		};
+		scratch_partition: partition@70000 {
+			label = "image-scratch";
+			reg = <0x70000 0xa000>;
+		};
+		storage_partition: partition@7a000 {
+			label = "storage";
+			reg = <0x7a000 0x6000>;
+		};
+	};
+};
+
+
+
+
