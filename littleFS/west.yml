@@ -1,0 +1,23 @@
+/*
+ * west.yml - West manifest for dependencies
+ */
+
+manifest:
+  self:
+    path: littleFS
+
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject-rtos
+      revision: main
+      import:
+        # By using name-allowlist we can clone only the modules that are
+        # strictly needed by the application.
+        name-allowlist:
+          - cmsis      # required by the ARM port
+          - hal_nordic # required by the nrf52832 SoC
+          - mbedtls    # required by the nrf_security module

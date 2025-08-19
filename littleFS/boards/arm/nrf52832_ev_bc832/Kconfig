@@ -1,0 +1,31 @@
+# nRF52832 EV BC832 board configuration
+
+# Copyright (c) 2016 Nordic Semiconductor ASA
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_ENABLE_DCDC
+	bool "DCDC mode"
+	select SOC_DCDC_NRF52X
+	default y
+	depends on BOARD_NRF52832_EV_BC832
+
+# Additional Configuration Options for MX25L51245G Flash
+
+# MX25L51245G Configuration
+config MX25L51245G_SPI_FREQUENCY
+    int "MX25L51245G SPI frequency"
+    default 8000000
+    help
+      SPI frequency for MX25L51245G communication in Hz
+
+config MX25L51245G_PAGE_SIZE
+    int "MX25L51245G page size"
+    default 256
+    help
+      Page size of MX25L51245G NOR flash in bytes
+
+config MX25L51245G_SECTOR_SIZE
+    int "MX25L51245G sector size"
+    default 4096
+    help
+      Sector size of MX25L51245G NOR flash in bytes
