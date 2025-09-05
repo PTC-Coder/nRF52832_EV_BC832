@@ -75,9 +75,6 @@ typedef struct {
 } MyData;
 
 
-
-
-
 int main(void)
 {
 	int ret;
@@ -224,6 +221,41 @@ int main(void)
         LOG_INF("  ID: %d", readData.id);
         LOG_INF("  Name: %s", readData.name);
         LOG_INF("  Temperature: %.1f°C", (double)readData.temperature_c);
+        LOG_INF("  Date/Time: %s", dateTimeStr);
+    }
+
+	// ******************** schedule.sch struct test **************
+
+	struct tm newTime = {
+		.tm_year = 2025 - 1900U,
+		.tm_mon = 9 - 1U,
+		.tm_mday = 5U,
+		.tm_hour = 15U,
+		.tm_min = 30U,
+		.tm_sec = 0U
+	};	
+
+	MyData writeData = {2,"struct from nRF", 21.0, newTime};
+
+   
+    LOG_INF("Writing setup2.bin file...");    
+   
+	ret = mx25l51245g_write_struct("setup2.bin", &writeData, sizeof(MyData));
+
+    ret = mx25l51245g_read_struct("setup2.bin", &readData, sizeof(MyData));
+    
+    if (ret == -ENOENT) {
+        LOG_INF("setup2.bin file does not exist");
+    } else if (ret < 0) {
+        LOG_ERR("Failed to read setup2.bin file: error %d", ret);
+    } else {
+        // Successfully read the file - display the data
+        strftime(dateTimeStr, sizeof(dateTimeStr), "%Y-%m-%d %H:%M:%SZ", &readData.setDateTime);
+        
+        LOG_INF("Setup2.bin Data Read Successfully:");
+        LOG_INF("  ID: %d", readData.id);
+        LOG_INF("  Name: %s", readData.name);
+        LOG_INF("  Temperature(°C): %.1f", (double)readData.temperature_c);
         LOG_INF("  Date/Time: %s", dateTimeStr);
     }
 
