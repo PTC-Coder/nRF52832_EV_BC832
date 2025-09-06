@@ -1,24 +1,9 @@
-.. zephyr:code-sample:: blinky
-   :name: Blinky
-   :relevant-api: gpio_interface
-
-   Blink an LED forever using the GPIO API.
+Interface to Macronix MX25L51245GZ2I-08G IC FLASH 512MBIT SPI/QUAD 8WSON using LittleFS library imported from MAX32666 LittleFS library.
 
 Overview
 ********
 
-The Blinky sample blinks an LED forever using the :ref:`GPIO API <gpio_api>`.
-
-The source code shows how to:
-
-#. Get a pin specification from the :ref:`devicetree <dt-guide>` as a
-   :c:struct:`gpio_dt_spec`
-#. Configure the GPIO pin as an output
-#. Toggle the pin forever
-
-See :zephyr:code-sample:`pwm-blinky` for a similar sample that uses the PWM API instead.
-
-.. _blinky-sample-requirements:
+The example shows how to interface to the MX25L51245GZ2I-08G using SPI Mode 0 interface and configure LittleFS library using the same Flash format as what would be use on the MAX326666 LittleFS format.
 
 Requirements
 ************
@@ -29,68 +14,35 @@ Your board must:
    Zephyr's :ref:`boards`).
 #. Have the LED configured using the ``led0`` devicetree alias.
 
+#. Connect ot MX25L51245GZ2I-08G via Pin 0.25 (SCK), Pin 0.23 (MOSI), Pins 0.24 (MISO), and Pin 0.22 (CS)
+
 Building and Running
 ********************
+Use the following Build Configuration:
 
-Build and flash Blinky as follows, changing ``reel_board`` for your board:
+* **SDK:** nRF Connect SDK v2.6.1
 
-.. zephyr-app-commands::
-   :zephyr-app: samples/basic/blinky
-   :board: reel_board
-   :goals: build flash
-   :compact:
+* **Toolchain:** nRF Connect SDK Toolchain v2.6.1
 
-After flashing, the LED starts to blink. If a runtime error occurs, the sample
-exits without printing to the console.
+* **Board Target:** nrf52832_ev_bc832
 
-Build errors
-************
+* **Base configuration files (Kconfig fragments):** prj.conf
 
-You will see a build error at the source code line defining the ``struct
-gpio_dt_spec led`` variable if you try to build Blinky for an unsupported
-board.
+* **Extra Kconfig fargments:** NONE
 
-On GCC-based toolchains, the error looks like this:
+* **Base Devicetree overlays:** boards/arm/nrf52832_ev_bc832/nrf52832_ev_bc832.overlay
 
-.. code-block:: none
+* **Extra Devicetree overlays:** NONE
 
-   error: '__device_dts_ord_DT_N_ALIAS_led_P_gpios_IDX_0_PH_ORD' undeclared here (not in a function)
+* **Snippets:** NONE
 
-Adding board support
-********************
+* **Optimization level (size, speed, or debugging):** Use Project default
 
-To add support for your board, add something like this to your devicetree:
+* **Extra CMake arguments:** NONE
 
-.. code-block:: DTS
+* **Build directory name:** build
 
-   / {
-   	aliases {
-   		led0 = &myled0;
-   	};
+* **Generate only:** NOT CHECKED
 
-   	leds {
-   		compatible = "gpio-leds";
-   		myled0: led_0 {
-   			gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-                };
-   	};
-   };
+* **System build (sysbuild):** Build system default
 
-The above sets your board's ``led0`` alias to use pin 13 on GPIO controller
-``gpio0``. The pin flags :c:macro:`GPIO_ACTIVE_HIGH` mean the LED is on when
-the pin is set to its high state, and off when the pin is in its low state.
-
-Tips:
-
-- See :dtcompatible:`gpio-leds` for more information on defining GPIO-based LEDs
-  in devicetree.
-
-- If you're not sure what to do, check the devicetrees for supported boards which
-  use the same SoC as your target. See :ref:`get-devicetree-outputs` for details.
-
-- See :zephyr_file:`include/zephyr/dt-bindings/gpio/gpio.h` for the flags you can use
-  in devicetree.
-
-- If the LED is built in to your board hardware, the alias should be defined in
-  your :ref:`BOARD.dts file <devicetree-in-out-files>`. Otherwise, you can
-  define one in a :ref:`devicetree overlay <set-devicetree-overlays>`.
