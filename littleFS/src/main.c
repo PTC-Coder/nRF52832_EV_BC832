@@ -15,6 +15,8 @@
 #include <time.h>
 #include <errno.h>
 #include "mx25l51245g_flash.h"
+#include <zephyr/drivers/clock_control.h>
+#include <zephyr/drivers/clock_control/nrf_clock_control.h>
 
 
 /* STEP 9 - Increase the sleep time from 100ms to 10 minutes  */
@@ -169,6 +171,10 @@ int main(void)
     	char read_buffer[100];
     
     	LOG_INF("Starting MX25L51245G NOR Flash Demo");
+    
+    // Check actual CPU frequency
+    uint32_t cpu_freq = sys_clock_hw_cycles_per_sec();
+    LOG_INF("CPU running at %u Hz (%u MHz)", cpu_freq, cpu_freq / 1000000);
     
     // Initialize the system
     // Initialize the full system with LittleFS

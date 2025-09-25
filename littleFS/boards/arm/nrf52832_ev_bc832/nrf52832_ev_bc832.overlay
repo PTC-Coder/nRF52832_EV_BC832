@@ -22,6 +22,10 @@
 	};
 };
 
+&clock {
+	hfclk-frequency = <64000000>;
+};
+
 &spi0 {
     compatible = "nordic,nrf-spim";
 	status = "okay";
